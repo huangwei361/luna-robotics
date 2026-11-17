@@ -170,6 +170,104 @@
             font-size: 1.05rem; color: var(--sub); max-width: 680px; margin: 0 auto;
         }
 
+        /* ── 图灵机器人产品 ── */
+        .tur-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px; max-width: 1180px; margin: 0 auto;
+        }
+        .tur-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden;
+            transition: all 0.3s;
+        }
+        .tur-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(100,255,218,0.28);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+        }
+        .tur-card .tur-head {
+            padding: 22px 24px 18px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.025);
+        }
+        .tur-card .tur-tag {
+            display: inline-block; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 1px; padding: 2px 9px; border-radius: 4px;
+            margin-bottom: 9px;
+        }
+        .tur-card.c1 .tur-tag { background: rgba(74,144,217,0.2); color: #7FB3E8; }
+        .tur-card.c2 .tur-tag { background: rgba(226,123,88,0.2); color: var(--mars); }
+        .tur-card.c3 .tur-tag { background: rgba(100,255,218,0.16); color: var(--glow); }
+        .tur-card.c4 .tur-tag { background: rgba(201,212,224,0.16); color: var(--moon); }
+        .tur-card h3 { font-size: 1.12rem; margin-bottom: 4px; }
+        .tur-card .tur-sub { font-size: 0.82rem; color: var(--sub); }
+        .tur-card .tur-body { padding: 20px 24px 24px; }
+        .tur-model {
+            display: flex; justify-content: space-between; align-items: baseline;
+            padding: 8px 0; border-bottom: 1px dashed var(--border);
+            font-size: 0.86rem;
+        }
+        .tur-model:last-child { border-bottom: none; }
+        .tur-model .m-name { color: var(--text); font-weight: 600; font-family: Consolas, Monaco, monospace; font-size: 0.83rem; }
+        .tur-model .m-spec { color: var(--sub); text-align: right; }
+        .tur-model .m-spec b { color: var(--mars); font-weight: 600; }
+
+        /* ── 技术能力 ── */
+        .tech-cap-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px; max-width: 1180px; margin: 0 auto;
+        }
+        .tech-cap {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 28px;
+            transition: all 0.3s;
+        }
+        .tech-cap:hover { border-color: rgba(226,123,88,0.3); }
+        .tech-cap .tc-icon {
+            width: 48px; height: 48px; border-radius: 11px;
+            background: linear-gradient(135deg, rgba(226,123,88,0.18), rgba(100,255,218,0.1));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.35rem; margin-bottom: 16px;
+        }
+        .tech-cap h3 { font-size: 1.1rem; margin-bottom: 6px; }
+        .tech-cap .tc-tagline {
+            font-size: 0.8rem; color: var(--mars); margin-bottom: 12px;
+            font-weight: 600; letter-spacing: 0.3px;
+        }
+        .tech-cap p { font-size: 0.89rem; color: var(--sub); line-height: 1.75; }
+        .tech-cap .tc-points {
+            list-style: none; margin-top: 14px; font-size: 0.85rem; color: var(--sub);
+        }
+        .tech-cap .tc-points li {
+            padding: 6px 0 6px 18px; position: relative;
+        }
+        .tech-cap .tc-points li::before {
+            content: '▸'; position: absolute; left: 0; color: var(--mars); font-size: 0.75rem;
+        }
+
+        /* ── 里程碑（具身智能进展） ── */
+        .evo-list { max-width: 940px; margin: 0 auto; }
+        .evo-item {
+            display: flex; gap: 22px; padding: 22px 24px;
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; margin-bottom: 14px;
+            transition: all 0.25s;
+        }
+        .evo-item:hover { border-color: rgba(100,255,218,0.25); }
+        .evo-item .evo-year {
+            min-width: 74px; font-size: 1.05rem; font-weight: 800;
+            color: var(--mars); padding-top: 2px;
+        }
+        .evo-item .evo-body h4 { font-size: 1.02rem; margin-bottom: 5px; }
+        .evo-item .evo-body p { font-size: 0.89rem; color: var(--sub); }
+        .evo-item .evo-badge {
+            display: inline-block; margin-top: 9px; padding: 2px 10px;
+            border-radius: 12px; font-size: 0.73rem; font-weight: 700;
+        }
+        .evo-badge.b-blue { background: rgba(74,144,217,0.18); color: #7FB3E8; }
+        .evo-badge.b-orange { background: rgba(226,123,88,0.18); color: var(--mars); }
+        .evo-badge.b-green { background: rgba(100,255,218,0.14); color: var(--glow); }
+
         /* ── Overview cards ── */
         .ov-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -447,6 +545,7 @@
         </div>
         <ul class="links">
             <li><a href="#overview">认证概览</a></li>
+            <li><a href="#turin">图灵机器人</a></li>
             <li><a href="#levels">三级体系</a></li>
             <li><a href="#process">考核流程</a></li>
             <li><a href="#schedule">考试安排</a></li>
@@ -548,6 +647,272 @@
             <strong>认证价值：</strong>本次认证结果将持续作为公司<b>挖掘 AI 人才、评价各单位 AI 能力建设成效</b>的重要参考依据。
             通过两个阶段考核者授予第二期对应级别证书；后续作为纳入公司 AI 人才储备池、职位晋升、评优及专项 Token 支持的重要依据；
             对成绩优异的员工，将在重大项目担纲、科研项目主导、外部培训赋能等方面给予倾斜支持。
+        </div>
+
+        <div class="tech-cap-grid" style="margin-top:36px;">
+            <div class="tech-cap">
+                <div class="tc-icon">&#129504;</div>
+                <h3>宝信图灵认证（BTC）</h3>
+                <div class="tc-tagline">AI 能力认证 · 本专题</div>
+                <p>由<b>宝信软件人力资源部</b>主办，依托中国宝武学习系统·宝信软件分中心举行，
+                面向全员分层培养 AI 能力，解决"AI 技术在工业业务场景落地应用"的问题。</p>
+                <ul class="tc-points">
+                    <li>三个等级：新锐级 L1 / 小咖级 L2 / 达人级 L3</li>
+                    <li>考核：线上理论测试 → 实操/项目实战/答辩</li>
+                    <li>面向人群：全体员工，AI 素养与技能认证</li>
+                </ul>
+            </div>
+            <div class="tech-cap">
+                <div class="tc-icon">&#129497;</div>
+                <h3>图灵机器人工程师认证</h3>
+                <div class="tc-tagline">机器人操作技能认证 · 线下实训</div>
+                <p>由<b>图灵机器人</b>主办，在江苏海安图灵生产基地线下举办，
+                聚焦国产工业机器人的理论体系与实操，培养能上手用好机器人的一线应用人才。</p>
+                <ul class="tc-points">
+                    <li>课程：基础理论、坐标系标定、后台程序与 Socket 通讯</li>
+                    <li>实操：坐标系标定实操与程序编程、电气系统与 IO 接线</li>
+                    <li>已办五期（第五期为马钢专场 2026.10），马钢首批自主持证人才成型</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="notice" style="margin-top:36px;">
+            <strong>两套认证如何配合：</strong>BTC 解决"会不会用 AI、能不能用 AI 做业务"，
+            图灵机器人工程师认证解决"会不会用机器人、能不能操作与维护机器人"。
+            对从事机器人应用与集成的岗位人员，建议<b>两条路径并行</b>：
+            以 BTC 建立 AI 方法论与工具能力，以图灵认证建立对本体与控制系统的实操理解，
+            两者叠加才具备"用 AI 驱动机器人落地工业场景"的完整能力。
+        </div>
+    </section>
+
+    <!-- 图灵机器人产品 -->
+    <section id="turin">
+        <div class="section-header">
+            <div class="tag">TURIN ROBOTICS</div>
+            <h2>图灵机器人 · 技术与产品</h2>
+            <p>宝信软件控股的工业机器人品牌。1kg-500kg 负载全系列自主研发，
+            涵盖六轴、SCARA、协作、弧焊四大品类，累计交付超 30000 台。</p>
+        </div>
+
+        <div class="tur-grid">
+            <div class="tur-card c1">
+                <div class="tur-head">
+                    <span class="tur-tag">通用系列</span>
+                    <h3>六轴工业机器人</h3>
+                    <div class="tur-sub">垂直多关节串联结构 · EtherCAT 总线 · IP54</div>
+                </div>
+                <div class="tur-body">
+                    <div class="tur-model"><span class="m-name">TKB060</span><span class="m-spec">6kg · 720mm · <b>±0.02mm</b></span></div>
+                    <div class="tur-model"><span class="m-name">TKB1210</span><span class="m-spec">7kg · 960mm · ±0.04mm</span></div>
+                    <div class="tur-model"><span class="m-name">TKB2670</span><span class="m-spec">20kg · 1721mm · ±0.05mm</span></div>
+                    <div class="tur-model"><span class="m-name">TKB3690</span><span class="m-spec">30kg · 1920mm · ±0.08mm</span></div>
+                    <div class="tur-model"><span class="m-name">TKB5700</span><span class="m-spec">70kg · 2119mm · <b>腕部330Nm</b></span></div>
+                    <div class="tur-model"><span class="m-name">TKB5800</span><span class="m-spec">50kg · 2448mm · ±0.08mm</span></div>
+                </div>
+            </div>
+
+            <div class="tur-card c2">
+                <div class="tur-head">
+                    <span class="tur-tag">重载系列</span>
+                    <h3>重载机器人</h3>
+                    <div class="tur-sub">大臂展 · 千牛米级腕部扭矩 · 钢铁冶金主力</div>
+                </div>
+                <div class="tur-body">
+                    <div class="tur-model"><span class="m-name">RRB6600</span><span class="m-spec">155kg · 3200mm · <b>腕部1000Nm</b></span></div>
+                    <div class="tur-model"><span class="m-name">RRB6700</span><span class="m-spec">210kg · 2700mm · ±0.1mm</span></div>
+                    <div class="tur-model"><span class="m-name">RRB7600</span><span class="m-spec">500kg · 2350mm · ±0.1mm</span></div>
+                    <div class="tur-model"><span class="m-name">TKB660</span><span class="m-spec">四轴 · 180kg · 3200mm</span></div>
+                    <div class="tur-model"><span class="m-name">TKB460</span><span class="m-spec">四轴 · 30kg · 1840mm</span></div>
+                </div>
+            </div>
+
+            <div class="tur-card c3">
+                <div class="tur-head">
+                    <span class="tur-tag">SCARA 系列</span>
+                    <h3>SCARA 平面机器人</h3>
+                    <div class="tur-sub">节拍 0.4s · 高速取放 · 3C 与新能源装配</div>
+                </div>
+                <div class="tur-body">
+                    <div class="tur-model"><span class="m-name">TR03-400S</span><span class="m-spec">3kg · 400mm · <b>±0.01mm</b></span></div>
+                    <div class="tur-model"><span class="m-name">TR03-600S</span><span class="m-spec">3kg · 600mm · ±0.01mm</span></div>
+                    <div class="tur-model"><span class="m-name">TR10-800S</span><span class="m-spec">10kg · 800mm · ±0.01mm</span></div>
+                    <div class="tur-model"><span class="m-name">STH100</span><span class="m-spec">10kg · 1000mm</span></div>
+                    <div class="tur-model"><span class="m-name">STH500</span><span class="m-spec">50kg · 1200mm</span></div>
+                </div>
+            </div>
+
+            <div class="tur-card c4">
+                <div class="tur-head">
+                    <span class="tur-tag">协作 &amp; 弧焊</span>
+                    <h3>协作机器人 / 弧焊系列</h3>
+                    <div class="tur-sub">全中文编程 · 傻瓜式示教 · 人机共融工位</div>
+                </div>
+                <div class="tur-body">
+                    <div class="tur-model"><span class="m-name">TCR050</span><span class="m-spec">5kg · 900mm · ±0.03mm</span></div>
+                    <div class="tur-model"><span class="m-name">TCR100</span><span class="m-spec">10kg · 1310mm · ±0.05mm</span></div>
+                    <div class="tur-model"><span class="m-name">TCR200 / 300</span><span class="m-spec">20kg / 30kg 负载</span></div>
+                    <div class="tur-model"><span class="m-name">ATOM 系列</span><span class="m-spec">10-200kg · 打磨/3C</span></div>
+                    <div class="tur-model"><span class="m-name">TKB1440</span><span class="m-spec">弧焊 · 10kg · 1455mm</span></div>
+                    <div class="tur-model"><span class="m-name">TKB2030</span><span class="m-spec">弧焊 · 6kg · 2078mm</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice" style="margin-top:44px;">
+            <strong>型号命名规范：</strong>
+            <b>TKB</b> 通用六轴 · <b>RRB</b> 重载 · <b>TR</b> SCARA · <b>TCR</b> 协作 ·
+            <b>ST</b> 旧款 SCARA · <b>ATOM</b> 通用新品牌。
+            数字段表示负载(kg)，数字后段表示臂展(mm)，<b>C</b>=Cobot 协作，<b>S</b>=SCARA，
+            <b>T/W/H</b>=机型细分。
+        </div>
+    </section>
+
+    <!-- 图灵技术能力 -->
+    <section id="turin-tech" class="alt">
+        <div class="section-header">
+            <div class="tag">CORE TECHNOLOGY</div>
+            <h2>图灵核心技术能力</h2>
+            <p>从控制系统到具身智能，全栈自主技术栈</p>
+        </div>
+
+        <div class="tech-cap-grid">
+            <div class="tech-cap">
+                <div class="tc-icon">&#129513;</div>
+                <h3>完全自研控制系统</h3>
+                <div class="tc-tagline">核心控制器 + 驱动软件 100% 自主研发</div>
+                <p>核心的机器人控制器和驱动软件由公司独立自主研发，具有完全独立的自主知识产权，
+                降低了机器人控制器成本。适用于各款图灵系列机器人。</p>
+                <ul class="tc-points">
+                    <li>EtherCAT 总线，通讯周期 1ms</li>
+                    <li>核心零部件（减速器、伺服电机）采用进口部件确保性能稳定</li>
+                    <li>非核心部件国产化以降低成本</li>
+                </ul>
+            </div>
+
+            <div class="tech-cap">
+                <div class="tc-icon">&#9002;</div>
+                <h3>自主开发示教器</h3>
+                <div class="tc-tagline">傻瓜式操作 · 2小时上手</div>
+                <p>编程界面与编程方法结合多年各款机器人应用经验完全独立自主开发。
+                虽然同样采用示教方式，但编程操作比主流方式简单许多。</p>
+                <ul class="tc-points">
+                    <li>具有一般电器知识的操作人员，2小时内掌握编程方法</li>
+                    <li>面向一线操作人员设计，降低机器人使用门槛</li>
+                    <li>支撑图灵机器人工程师认证培训体系</li>
+                </ul>
+            </div>
+
+            <div class="tech-cap">
+                <div class="tc-icon">&#9729;</div>
+                <h3>宝罗云平台</h3>
+                <div class="tc-tagline">统一管理 · BOO 与 RaaS 模式落地</div>
+                <p>聚焦工业机器人及具身智能机器人的本体设计、整机制造、系统集成与算法开发，
+                打造面向多行业机器人解决方案，依托平台实现统一管理与效能跃升。</p>
+                <ul class="tc-points">
+                    <li>机器人规模化接入云端统一管理</li>
+                    <li>BOO 模式和 RaaS 模式在多个钢铁基地落地</li>
+                    <li>基于宝联登 xIn³Plat 工业互联网平台底座</li>
+                </ul>
+            </div>
+
+            <div class="tech-cap">
+                <div class="tc-icon">&#129504;</div>
+                <h3>具身智能与 VLA 大模型</h3>
+                <div class="tc-tagline">视觉-语言-动作大模型初步应用</div>
+                <p>2025年实现稳定直立行走、自主导航及视觉语言动作（VLA）大模型初步应用，
+                基本具备完整通用具身智能机器人能力。</p>
+                <ul class="tc-points">
+                    <li>世界人工智能大会（WAIC）制造业场景产线上下料示范</li>
+                    <li>腾讯生态大会同台展示</li>
+                    <li>重载轮式具身智能机器人覆盖钢铁、有色、3C、汽车行业</li>
+                </ul>
+            </div>
+
+            <div class="tech-cap">
+                <div class="tc-icon">&#127981;</div>
+                <h3>制造产能</h3>
+                <div class="tc-tagline">年产 10 万台套 · 嘉定制造基地</div>
+                <p>2023年完成年产两万台智能机器人生产基地建设，2026年嘉定制造基地搬迁升级，
+                具备年产 10 万台套生产制造能力。</p>
+                <ul class="tc-points">
+                    <li>2026年5月装配入库量达 830 台</li>
+                    <li>完成重载轮式双臂、210kg 高防护重载机器人样机试制</li>
+                    <li>国家级专精特新"小巨人"企业</li>
+                </ul>
+            </div>
+
+            <div class="tech-cap">
+                <div class="tc-icon">&#127757;</div>
+                <h3>全球服务网络</h3>
+                <div class="tc-tagline">44+ 国家和地区 · 100+ 战略客户</div>
+                <p>冶金一线机器人产品及解决方案占据 30% 以上市场份额，
+                全国规模以上钢厂均有图灵产品部署。</p>
+                <ul class="tc-points">
+                    <li>累计提供超 30000 台机器人、超 2200 种工业应用</li>
+                    <li>3C：华勤技术、瑞声科技、立讯精密、通达集团</li>
+                    <li>汽车：比亚迪、吉利、岱美股份；新能源：隆基、捷佳伟创</li>
+                    <li>与 SGS 达成全系列 CE-MR 认证服务战略合作</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 具身智能演进 -->
+    <section id="evolution">
+        <div class="section-header">
+            <div class="tag">EVOLUTION</div>
+            <h2>具身智能演进历程</h2>
+            <p>从概念机到通用具身智能能力，图灵机器人的技术路径</p>
+        </div>
+
+        <div class="evo-list">
+            <div class="evo-item">
+                <div class="evo-year">2023</div>
+                <div class="evo-body">
+                    <h4>人形机器人在钢铁行业的应用研究</h4>
+                    <p>启动人形机器人在钢铁行业的应用研究。打造完成"宝罗示范产线"，
+                    巡检机器狗、炉前移动测温取样机器人等首台套研发应用顺利推进。</p>
+                    <span class="evo-badge b-blue">应用研究期</span>
+                </div>
+            </div>
+            <div class="evo-item">
+                <div class="evo-year">2024</div>
+                <div class="evo-body">
+                    <h4>首台人形机器人概念机 · 二代人形机器人开发完成</h4>
+                    <p>推出首台人形机器人概念机，完成二代人形机器人开发。
+                    积极开展图灵机器人首台套应用推广和国产化替代，
+                    在钢铁、有色、3C电子等行业实现规模化应用。</p>
+                    <span class="evo-badge b-blue">概念机 → 二代机</span>
+                </div>
+            </div>
+            <div class="evo-item">
+                <div class="evo-year">2025</div>
+                <div class="evo-body">
+                    <h4>VLA 大模型初步应用 · 通用具身智能能力成型</h4>
+                    <p>持续研发冶金工业具身智能机器人全栈技术，实现稳定直立行走、自主导航及
+                    视觉语言动作（VLA）大模型初步应用，基本具备完整通用具身智能机器人能力。
+                    在世界人工智能大会、腾讯生态大会展示制造业场景产线上下料示范应用。
+                    完成重载轮式具身智能机器人研发。</p>
+                    <span class="evo-badge b-orange">VLA 大模型落地</span>
+                </div>
+            </div>
+            <div class="evo-item">
+                <div class="evo-year">2026</div>
+                <div class="evo-body">
+                    <h4>重载轮式双臂 · 210kg 高防护样机 · 产能突破</h4>
+                    <p>完成重载轮式双臂、210kg 高防护重载机器人样机试制。
+                    工业机器人产能实现阶段性突破，5月份装配入库量达 830 台，
+                    嘉定制造基地具备年产 10 万台套生产制造能力。</p>
+                    <span class="evo-badge b-green">产能与样机双突破</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice" style="margin-top:40px;">
+            <strong>关于图灵机器人工程师认证培训：</strong>图灵机器人工程师认证培训在江苏海安图灵生产基地线下举办，
+            聚焦国产工业机器人的理论体系与实操，课程覆盖基础理论、坐标系标定、
+            后台程序与 Socket 通讯编程、电气系统与 IO 接线等模块。
+            2026年10月已举办第五期（马钢专场），推动马钢首批自主持证的机器人应用人才队伍成型。
         </div>
     </section>
 
@@ -921,6 +1286,8 @@
                 <h5>认证体系</h5>
                 <ul>
                     <li><a href="#overview">认证概览</a></li>
+                    <li><a href="#turin">图灵产品线</a></li>
+                    <li><a href="#turin-tech">核心技术</a></li>
                     <li><a href="#levels">新锐级 L1</a></li>
                     <li><a href="#levels">小咖级 L2</a></li>
                     <li><a href="#levels">达人级 L3</a></li>

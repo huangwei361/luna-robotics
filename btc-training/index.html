@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宝信图灵认证 BTC · Luna Robotics 月神机器人</title>
+    <style>
+        :root {
+            --space: #050A18;
+            --deep: #0B162C;
+            --moon: #C9D4E0;
+            --mars: #E27B58;
+            --earth: #4A90D9;
+            --glow: #64FFDA;
+            --text: #E8EDF5;
+            --sub: #8F9BB3;
+            --card: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background: var(--space);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;
+            background: radial-gradient(ellipse at top, #0B162C 0%, #050A18 60%);
+        }
+        .stars::before {
+            content: ''; position: absolute;
+            width: 2px; height: 2px; border-radius: 50%;
+            box-shadow:
+                50px 30px rgba(255,255,255,0.8), 130px 80px rgba(255,255,255,0.6),
+                200px 120px rgba(255,255,255,0.7), 320px 60px rgba(255,255,255,0.5),
+                450px 150px rgba(255,255,255,0.8), 580px 90px rgba(255,255,255,0.6),
+                700px 180px rgba(255,255,255,0.7), 850px 40px rgba(255,255,255,0.5),
+                950px 200px rgba(255,255,255,0.6), 1100px 100px rgba(255,255,255,0.8),
+                150px 350px rgba(255,255,255,0.5), 350px 420px rgba(255,255,255,0.7),
+                550px 380px rgba(255,255,255,0.6), 750px 450px rgba(255,255,255,0.8),
+                900px 500px rgba(255,255,255,0.5), 1050px 550px rgba(255,255,255,0.7);
+            animation: twinkle 8s infinite alternate;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(5, 10, 24, 0.9);
+            backdrop-filter: blur(16px);
+            padding: 0 40px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        nav .logo {
+            font-size: 1.35rem; font-weight: 700; color: var(--text);
+            letter-spacing: 1px;
+            display: flex; align-items: center; gap: 12px;
+        }
+        nav .logo .btc-badge {
+            background: var(--mars); color: #fff; padding: 2px 9px;
+            border-radius: 4px; font-size: 0.68rem; font-weight: 700; letter-spacing: 1px;
+        }
+        nav .logo a { color: var(--text); text-decoration: none; }
+        nav .logo a:hover { color: var(--glow); }
+        nav .links { display: flex; gap: 30px; list-style: none; }
+        nav .links a {
+            color: var(--sub); text-decoration: none; font-size: 0.9rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        nav .links a:hover { color: var(--glow); }
+        nav .links a.back { color: var(--mars); font-weight: 600; }
+        nav .cta-btn {
+            background: var(--mars); color: #fff; border: none;
+            padding: 9px 22px; border-radius: 6px; font-size: 0.88rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        nav .cta-btn:hover { background: #D06A47; box-shadow: 0 0 20px rgba(226,123,88,0.4); }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; z-index: 1;
+            padding: 170px 40px 110px;
+            text-align: center;
+        }
+        .hero .tagline {
+            display: inline-block;
+            background: rgba(226, 123, 88, 0.12);
+            border: 1px solid rgba(226, 123, 88, 0.35);
+            color: var(--mars); padding: 6px 18px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 26px;
+            letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: 3rem; font-weight: 800; letter-spacing: -0.5px;
+            line-height: 1.2; margin-bottom: 20px;
+        }
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.15rem; color: var(--sub);
+            max-width: 720px; margin: 0 auto 38px;
+            line-height: 1.8;
+        }
+        .hero .actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-block; padding: 13px 30px; border-radius: 7px;
+            font-size: 0.95rem; font-weight: 600; text-decoration: none;
+            cursor: pointer; border: none; transition: all 0.2s;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--mars), #D06A47);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(226,123,88,0.35);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(226,123,88,0.5); }
+        .btn-outline {
+            background: transparent; color: var(--text);
+            border: 2px solid var(--border);
+        }
+        .btn-outline:hover { border-color: var(--glow); color: var(--glow); }
+
+        /* ── Stats ── */
+        .mission-stats {
+            display: flex; gap: 46px; justify-content: center; flex-wrap: wrap;
+            margin-top: 66px; padding: 36px 40px;
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            max-width: 920px; margin-left: auto; margin-right: auto;
+        }
+        .stat { text-align: center; min-width: 110px; }
+        .stat .num {
+            font-size: 2.5rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--moon), var(--glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat .lbl { color: var(--sub); font-size: 0.88rem; margin-top: 4px; }
+
+        /* ── SECTIONS ── */
+        section { position: relative; z-index: 1; padding: 100px 40px; }
+        section.alt { background: rgba(255,255,255,0.02); }
+        .section-header { text-align: center; margin-bottom: 58px; }
+        .section-header .tag {
+            display: inline-block;
+            color: var(--mars); font-size: 0.85rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+        .section-header h2 {
+            font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+        .section-header p {
+            font-size: 1.05rem; color: var(--sub); max-width: 680px; margin: 0 auto;
+        }
+
+        /* ── Overview cards ── */
+        .ov-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 22px; max-width: 1150px; margin: 0 auto;
+        }
+        .ov-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 26px;
+            transition: all 0.3s;
+        }
+        .ov-card:hover { border-color: rgba(226,123,88,0.35); }
+        .ov-card .ov-label {
+            font-size: 0.78rem; font-weight: 700; color: var(--mars);
+            text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 8px;
+        }
+        .ov-card h4 { font-size: 1.05rem; margin-bottom: 8px; }
+        .ov-card p { font-size: 0.88rem; color: var(--sub); line-height: 1.7; }
+
+        /* ── Levels ── */
+        .levels-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 26px; max-width: 1180px; margin: 0 auto;
+        }
+        .level-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; overflow: hidden;
+            transition: all 0.3s;
+            display: flex; flex-direction: column;
+        }
+        .level-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(100,255,218,0.28);
+            box-shadow: 0 18px 44px rgba(0,0,0,0.42);
+        }
+        .level-card .card-head {
+            padding: 28px 30px 22px; position: relative; overflow: hidden;
+        }
+        .level-card.l1 .card-head { background: linear-gradient(135deg, rgba(74,144,217,0.34), rgba(74,144,217,0.08)); }
+        .level-card.l2 .card-head { background: linear-gradient(135deg, rgba(226,123,88,0.34), rgba(226,123,88,0.08)); }
+        .level-card.l3 .card-head { background: linear-gradient(135deg, rgba(100,255,218,0.26), rgba(74,144,217,0.14)); }
+        .level-card .card-head::after {
+            content: ''; position: absolute; right: -30px; top: -30px;
+            width: 130px; height: 130px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,255,255,0.09), transparent 70%);
+        }
+        .level-card .lv { font-size: 1.45rem; font-weight: 800; margin-bottom: 6px; }
+        .level-card.l1 .lv { color: #7FB3E8; }
+        .level-card.l2 .lv { color: var(--mars); }
+        .level-card.l3 .lv { color: var(--glow); }
+        .level-card .role { font-size: 0.9rem; color: var(--sub); }
+        .level-card .card-body { padding: 26px 30px 30px; flex: 1; }
+        .level-card .block { margin-bottom: 18px; }
+        .level-card .block:last-child { margin-bottom: 0; }
+        .level-card .block-label {
+            font-size: 0.78rem; font-weight: 700; color: var(--mars);
+            text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 6px;
+        }
+        .level-card .block-text { font-size: 0.9rem; color: var(--sub); line-height: 1.7; }
+        .level-card .block-text strong { color: var(--text); }
+        .level-card .steps { list-style: none; font-size: 0.89rem; color: var(--sub); }
+        .level-card .steps li {
+            padding: 9px 0 9px 26px; position: relative;
+            border-bottom: 1px dashed var(--border);
+        }
+        .level-card .steps li:last-child { border-bottom: none; }
+        .level-card .steps li::before {
+            content: attr(data-n); position: absolute; left: 0; top: 9px;
+            width: 17px; height: 17px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            color: var(--space); font-size: 0.66rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* ── Process ── */
+        .roadmap {
+            max-width: 1180px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+            gap: 20px;
+        }
+        .milestone {
+            background: var(--card);
+            border: 1px solid var(--border); border-radius: 14px;
+            padding: 26px 24px;
+            transition: all 0.25s;
+        }
+        .milestone:hover {
+            border-color: rgba(100,255,218,0.28);
+            transform: translateY(-3px);
+        }
+        .milestone .step {
+            width: 48px; height: 48px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            color: var(--space); font-size: 1.25rem; font-weight: 800;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
+        }
+        .milestone h4 {
+            font-size: 1.06rem; margin-bottom: 8px; color: var(--text);
+        }
+        .milestone p { font-size: 0.87rem; color: var(--sub); line-height: 1.7; }
+
+        /* ── Table ── */
+        .table-wrap { max-width: 1080px; margin: 0 auto; overflow-x: auto; }
+        table {
+            width: 100%; border-collapse: collapse;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px; overflow: hidden;
+            font-size: 0.9rem;
+        }
+        thead th {
+            background: rgba(226,123,88,0.16);
+            color: var(--mars); padding: 14px 18px;
+            text-align: left; font-weight: 700; font-size: 0.85rem;
+            letter-spacing: 0.5px; white-space: nowrap;
+            border-bottom: 1px solid var(--border);
+        }
+        tbody td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top; color: var(--sub);
+        }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: rgba(255,255,255,0.03); }
+        tbody td strong { color: var(--text); }
+        .hl { color: var(--mars); font-weight: 600; }
+        .hl-glow { color: var(--glow); font-weight: 600; }
+
+        /* ── Direction ── */
+        .direction-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 22px; max-width: 1180px; margin: 0 auto;
+        }
+        .dir-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 30px;
+            transition: all 0.3s;
+        }
+        .dir-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(100,255,218,0.28);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+        }
+        .dir-card .dir-icon {
+            width: 52px; height: 52px; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(226,123,88,0.2), rgba(100,255,218,0.1));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem; margin-bottom: 18px;
+        }
+        .dir-card h3 { font-size: 1.16rem; margin-bottom: 10px; }
+        .dir-card p { font-size: 0.9rem; color: var(--sub); line-height: 1.75; }
+        .dir-card .dir-meta {
+            margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--border);
+            font-size: 0.82rem; color: var(--mars); font-weight: 600;
+        }
+
+        /* ── Policy ── */
+        .policy-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px; max-width: 1000px; margin: 0 auto 46px;
+        }
+        .policy-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 28px; text-align: center;
+            transition: all 0.3s;
+        }
+        .policy-card:hover { border-color: rgba(226,123,88,0.32); }
+        .policy-card .year { font-size: 1.9rem; font-weight: 800; color: var(--moon); }
+        .policy-card .target {
+            font-size: 1.6rem; font-weight: 800; margin: 6px 0;
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .policy-card .desc { font-size: 0.86rem; color: var(--sub); }
+
+        /* ── Notice ── */
+        .notice {
+            background: rgba(226,123,88,0.08);
+            border: 1px solid rgba(226,123,88,0.28);
+            border-radius: 12px; padding: 22px 26px; margin: 0 auto 46px;
+            max-width: 1080px; font-size: 0.9rem; color: var(--sub);
+            line-height: 1.8;
+        }
+        .notice strong { color: var(--mars); }
+        .notice .hl-glow { color: var(--glow); }
+
+        /* ── Guide timeline ── */
+        .timeline { max-width: 900px; margin: 0 auto; }
+        .tl-item {
+            display: flex; gap: 24px; padding: 26px 0;
+            border-left: 3px solid var(--border); position: relative; margin-left: 14px;
+        }
+        .tl-item::before {
+            content: ''; position: absolute; left: -10px; top: 32px;
+            width: 16px; height: 16px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            border: 3px solid var(--space);
+        }
+        .tl-item .date {
+            min-width: 130px; font-weight: 700; color: var(--mars);
+            font-size: 0.94rem; padding-top: 2px;
+        }
+        .tl-item .content h4 { font-size: 1.05rem; margin-bottom: 6px; }
+        .tl-item .content p { font-size: 0.91rem; color: var(--sub); }
+
+        /* ── CTA ── */
+        .cta-section {
+            position: relative; z-index: 1;
+            text-align: center; padding: 100px 40px;
+            background: linear-gradient(135deg, rgba(226,123,88,0.1), rgba(100,255,218,0.04));
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+        .cta-section h2 { font-size: 2.4rem; margin-bottom: 16px; }
+        .cta-section > p { color: var(--sub); font-size: 1.1rem; margin-bottom: 40px; }
+        .cta-grid {
+            max-width: 960px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px;
+            text-align: left;
+        }
+        .cta-item {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 12px; padding: 24px;
+        }
+        .cta-item h4 { font-size: 1rem; margin-bottom: 7px; color: var(--mars); }
+        .cta-item p { font-size: 0.86rem; color: var(--sub); }
+
+        /* ── Footer ── */
+        footer {
+            position: relative; z-index: 1;
+            background: rgba(0,0,0,0.35); border-top: 1px solid var(--border);
+            padding: 60px 40px 30px; color: var(--sub);
+        }
+        .footer-content {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col .logo { font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+        .footer-col .logo span { color: var(--mars); }
+        .footer-col p { font-size: 0.9rem; line-height: 1.8; }
+        .footer-col h5 { color: var(--text); font-size: 0.95rem; margin-bottom: 18px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { color: var(--sub); text-decoration: none; font-size: 0.9rem; }
+        .footer-col ul li a:hover { color: var(--glow); }
+        .copyright {
+            max-width: 1100px; margin: 0 auto; padding-top: 30px;
+            border-top: 1px solid var(--border); font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            nav .links { display: none; }
+            .hero { padding: 130px 20px 80px; }
+            .hero h1 { font-size: 2.1rem; }
+            section { padding: 60px 20px; }
+            .footer-content { grid-template-columns: 1fr; }
+            .mission-stats { gap: 28px; padding: 28px 20px; }
+            .stat .num { font-size: 2rem; }
+            .roadmap { grid-template-columns: 1fr; }
+            .tl-item { flex-direction: column; gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">
+            <a href="../index.html">Luna<span>Robotics</span></a>
+            <span class="btc-badge">BTC</span>
+        </div>
+        <ul class="links">
+            <li><a href="#overview">认证概览</a></li>
+            <li><a href="#levels">三级体系</a></li>
+            <li><a href="#process">考核流程</a></li>
+            <li><a href="#schedule">考试安排</a></li>
+            <li><a href="#direction">发展方向</a></li>
+            <li><a href="../index.html" class="back">← 返回官网</a></li>
+        </ul>
+        <button class="cta-btn">立即报名</button>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="tagline">第二期 · 2026年11月启动</div>
+        <h1>宝信图灵认证 <span>BTC</span></h1>
+        <p>分层分类建设公司 AI 人才梯队，推动 AI 技术在工业业务场景落地应用。
+        打破逐级报考限制，员工可自主选择报考 BTC-L1 / L2 / L3 任意等级。<br>
+        从"会用 AI"到"构筑 AI"，让每一位员工都拥有自己的数字助理。</p>
+        <div class="actions">
+            <a href="#levels" class="btn btn-primary">查看三级体系</a>
+            <a href="#schedule" class="btn btn-outline">考试时间安排</a>
+        </div>
+
+        <div class="mission-stats">
+            <div class="stat">
+                <div class="num">3</div>
+                <div class="lbl">认证等级</div>
+            </div>
+            <div class="stat">
+                <div class="num">60min</div>
+                <div class="lbl">理论测试时长</div>
+            </div>
+            <div class="stat">
+                <div class="num">100分</div>
+                <div class="lbl">理论测试满分</div>
+            </div>
+            <div class="stat">
+                <div class="num">11.6-22</div>
+                <div class="lbl">模拟考开放期</div>
+            </div>
+            <div class="stat">
+                <div class="num">1万台+</div>
+                <div class="lbl">宝武2026机器人目标</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 概览 -->
+    <section id="overview" class="alt">
+        <div class="section-header">
+            <div class="tag">OVERVIEW</div>
+            <h2>什么是宝信图灵认证（BTC）</h2>
+            <p>首期认证已顺利完成实施，认证结果已同步更新在 BWHR。本期结合首期学员反馈与认证运行实际，
+            对 BTC 认证体系进行了迭代优化。</p>
+        </div>
+
+        <div class="ov-grid">
+            <div class="ov-card">
+                <div class="ov-label">主办单位</div>
+                <h4>宝信软件人力资源部</h4>
+                <p>依托中国宝武学习系统 · 宝信软件分中心统一举行，各等级独立命题。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">分级依据</div>
+                <h4>技术深度 + 应用场景</h4>
+                <p>分为三个层级，各等级独立考核，清晰界定能力边界。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">报考规则</div>
+                <h4>打破逐级报考限制</h4>
+                <p>可自主选择 L1 / L2 / L3 任意等级，无需按顺序逐级认证。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">证书延续</div>
+                <h4>首期证书继续有效</h4>
+                <p>无需重复认证，可自主报名参与更高等级认证。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">理论测试</div>
+                <h4>线上闭卷 · 100分 / 60分钟</h4>
+                <p>无论报考何等级，均须先通过线上理论测试方可进入后续环节。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">考试形式</div>
+                <h4>属地化集中在线闭卷</h4>
+                <p>各单位安排考场和现场监考老师，同一考场不少于 2 名监考老师。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">考试纪律</div>
+                <h4>腾讯会议视频监考</h4>
+                <p>总部人力部同步视频巡考。作弊、顶考将公司内部通报并严肃追责。</p>
+            </div>
+            <div class="ov-card">
+                <div class="ov-label">战略背景</div>
+                <h4>"人工智能+"行动</h4>
+                <p>国发〔2025〕11号明确"着力提升全员人工智能素养与技能"、"大力支持开展人工智能技能培训"。</p>
+            </div>
+        </div>
+
+        <div class="notice" style="margin-top:46px;">
+            <strong>认证价值：</strong>本次认证结果将持续作为公司<b>挖掘 AI 人才、评价各单位 AI 能力建设成效</b>的重要参考依据。
+            通过两个阶段考核者授予第二期对应级别证书；后续作为纳入公司 AI 人才储备池、职位晋升、评优及专项 Token 支持的重要依据；
+            对成绩优异的员工，将在重大项目担纲、科研项目主导、外部培训赋能等方面给予倾斜支持。
+        </div>
+    </section>
+
+    <!-- 三级体系 -->
+    <section id="levels">
+        <div class="section-header">
+            <div class="tag">THREE LEVELS</div>
+            <h2>BTC 三级认证体系</h2>
+            <p>从"会用 AI"到"构筑 AI"，三个等级对应三条清晰的成长路径</p>
+        </div>
+
+        <div class="levels-grid">
+            <div class="level-card l1">
+                <div class="card-head">
+                    <div class="lv">新锐级 BTC-L1</div>
+                    <div class="role">AI 数字助理 · 全员赋能</div>
+                </div>
+                <div class="card-body">
+                    <div class="block">
+                        <div class="block-label">目标</div>
+                        <div class="block-text">赋能全员，会用 AI 工具提效。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">定位</div>
+                        <div class="block-text">让 AI 成为每一位员工提升效率、释放创造力的"数字助理"。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">核心能力</div>
+                        <div class="block-text">会用 AI、AI 通识、提示词工程、内部 AI 工具链使用、企业级安全合规。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">考核方式</div>
+                        <ul class="steps">
+                            <li data-n="1">第一阶段：线上理论测试</li>
+                            <li data-n="2">第二阶段：日常办公智能体实操任务通关</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-card l2">
+                <div class="card-head">
+                    <div class="lv">小咖级 BTC-L2</div>
+                    <div class="role">技术骨干 · 场景落地</div>
+                </div>
+                <div class="card-body">
+                    <div class="block">
+                        <div class="block-label">目标</div>
+                        <div class="block-text">技术骨干，聚焦 AI 在业务场景落地。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">定位</div>
+                        <div class="block-text">利用 AI 思维重构业务流程，解决实际业务痛点，培养一批能将前沿 AI 技术与核心工业场景深度融合的中坚力量。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">核心能力</div>
+                        <div class="block-text">驾驭 AI、低代码平台开发、业务场景建模、API 工具集成、基础模型微调。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">考核方式</div>
+                        <ul class="steps">
+                            <li data-n="1">第一阶段：线上理论测试</li>
+                            <li data-n="2">第二阶段："微认证"项目制</li>
+                            <li data-n="3">基于工作流模式开展智能体搭建</li>
+                            <li data-n="4">必要时进行现场答辩</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="level-card l3">
+                <div class="card-head">
+                    <div class="lv">达人级 BTC-L3</div>
+                    <div class="role">技术达人 · 复杂攻坚</div>
+                </div>
+                <div class="card-body">
+                    <div class="block">
+                        <div class="block-label">目标</div>
+                        <div class="block-text">技术达人，能用 AI 解决复杂技术难题。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">定位</div>
+                        <div class="block-text">深耕工业 AI 落地实践，突破复杂业务技术瓶颈，打造一支精通 AI 技术、擅长解决复杂工程问题的资深专家团队。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">核心能力</div>
+                        <div class="block-text">构筑 AI、工业 AI 方案架构设计、算法模型优化攻关、高性能工程落地、AI 应用方案规划。</div>
+                    </div>
+                    <div class="block">
+                        <div class="block-label">考核方式</div>
+                        <ul class="steps">
+                            <li data-n="1">第一阶段：线上理论测试</li>
+                            <li data-n="2">第二阶段：开展复杂 AI 落地项目实战</li>
+                            <li data-n="3">取得阶段性应用成果</li>
+                            <li data-n="4">提交项目成果报告并接受现场答辩评审</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 考核流程 -->
+    <section id="process" class="alt">
+        <div class="section-header">
+            <div class="tag">PROCESS</div>
+            <h2>考核流程</h2>
+            <p>无论报考哪个等级，线上理论测试是必须通过的第一道门槛</p>
+        </div>
+
+        <div class="roadmap">
+            <div class="milestone">
+                <div class="step">1</div>
+                <h4>报名与选级</h4>
+                <p>结合自身 AI 技术掌握程度，自主选择 L1 / L2 / L3 任意等级，各等级独立命题。</p>
+            </div>
+            <div class="milestone">
+                <div class="step">2</div>
+                <h4>模拟考与复习周</h4>
+                <p>开放练习通道，熟悉题型与平台操作。模拟考成绩不计入正式认证考核结果，但强烈建议至少完整练习 2 次。</p>
+            </div>
+            <div class="milestone">
+                <div class="step">3</div>
+                <h4>线上理论测试</h4>
+                <p>属地化集中在线闭卷，100 分满分，60 分钟。必须通过方可进入下一阶段。</p>
+            </div>
+            <div class="milestone">
+                <div class="step">4</div>
+                <h4>实操 / 实战 / 答辩</h4>
+                <p>L1 实操任务通关 · L2 "微认证"项目制 · L3 项目实战成果报告 + 现场答辩评审。</p>
+            </div>
+            <div class="milestone">
+                <div class="step">5</div>
+                <h4>授予证书</h4>
+                <p>通过两个阶段考核者，授予第二期对应级别的"宝信图灵认证"（BTC）证书。</p>
+            </div>
+            </div>
+    </section>
+
+    <!-- 考试安排 -->
+    <section id="schedule">
+        <div class="section-header">
+            <div class="tag">SCHEDULE</div>
+            <h2>BTC-L1 线上理论测试安排</h2>
+            <p>依托中国宝武学习系统 · 宝信软件分中心统一举行</p>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th style="width:200px;">项目</th><th style="width:260px;">安排</th><th>说明</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>模拟考 / 复习周</strong></td><td class="hl">2026年11月6日 — 11月22日</td><td>开放模拟考试练习通道，供员工自主复习、熟悉考试题型与平台操作</td></tr>
+                    <tr><td><strong>正式考试时间</strong></td><td class="hl">2026年11月、12月</td><td>具体安排另行通知</td></tr>
+                    <tr><td><strong>考试方式</strong></td><td>属地化集中在线闭卷</td><td>各单位自行安排考场与现场监考老师</td></tr>
+                    <tr><td><strong>监考配置</strong></td><td>同一考场不少于 2 名监考老师</td><td>考场须设在有腾讯会议视频监考条件的场地</td></tr>
+                    <tr><td><strong>视频巡考</strong></td><td>总部人力部同步腾讯会议视频巡考</td><td>全程留痕，严肃对待</td></tr>
+                    <tr><td><strong>后续阶段</strong></td><td>L1 第二阶段、L2/L3 阶段另行通知</td><td>考试报名等安排将另行发布</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top:46px;" class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th style="width:250px;">登录方式</th><th>操作路径</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>宝武 OA 4.0</strong></td>
+                        <td>登录 OA 4.0（oa.baowugroup.cn） → 应用中心找到"宝武学习"（可通过"更多"编辑主页图标） → 下拉菜单选择 <span class="hl-glow">宝信软件 - 考试中心</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>网页链接</strong></td>
+                        <td>访问 learn.baowugroup.com/#/learnManagement/C007 → 使用工号、手机号及手机验证码登录 → 下拉菜单选择 <span class="hl-glow">宝信软件分中心 - 考试中心</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 发展方向 -->
+    <section id="direction" class="alt">
+        <div class="section-header">
+            <div class="tag">STRATEGIC DIRECTION</div>
+            <h2>公司 AI 能力发展方向</h2>
+            <p>以 BTC 三级认证为人才基座，向上承接"人工智能+"国家战略，向下落地工业业务场景</p>
+        </div>
+
+        <div class="direction-grid">
+            <div class="dir-card">
+                <div class="dir-icon">🧠</div>
+                <h3>全员 AI 素养筑基</h3>
+                <p>通过 BTC-L1 全面覆盖，让每一位员工都具备"数字助理"能力。从提示词工程到智能体实操，
+                把 AI 从"少数人的工具"变成"全员的基础生产力"。</p>
+                <div class="dir-meta">对应：BTC-L1 · 全员渗透率目标 100%</div>
+            </div>
+            <div class="dir-card">
+                <div class="dir-icon">⚙️</div>
+                <h3>工业 AI 场景落地</h3>
+                <p>依托 BTC-L2 培养业务场景落地骨干，围绕生产、质检、设备、能源、物流等核心环节，
+                用低代码平台、API 集成与模型微调，把 AI 真正嵌入业务流程。</p>
+                <div class="dir-meta">对应：BTC-L2 · 骨干覆盖率目标 20%</div>
+            </div>
+            <div class="dir-card">
+                <div class="dir-icon">🏗️</div>
+                <h3>复杂技术攻坚与架构</h3>
+                <p>通过 BTC-L3 组建资深专家团队，围绕工业 AI 方案架构设计、算法模型优化攻关、
+                高性能工程落地等方向，突破复杂业务技术瓶颈。</p>
+                <div class="dir-meta">对应：BTC-L3 · 专家团队目标 5-8%</div>
+            </div>
+            <div class="dir-card">
+                <div class="dir-icon">🤖</div>
+                <h3>具身智能与机器人</h3>
+                <p>结合集团"万名宝罗上岗"战略，在图灵机器人平台上深化具身智能能力：
+                从多模态感知到全身运动控制，从工业场景作业到复杂环境自主决策。</p>
+                <div class="dir-meta">战略方向：宝武2026年机器人目标超1万台套</div>
+            </div>
+            <div class="dir-card">
+                <div class="dir-icon">🏭</div>
+                <h3>智能制造与"3D岗位"替代</h3>
+                <p>围绕 Dirty / Dangerous / Duplicate 岗位的机器人替代目标，
+                推动 AI + 机器人在钢铁生产一线落地，从"黑灯工厂"到"无人库区"全面渗透。</p>
+                <div class="dir-meta">战略方向：消灭3D岗位 · 提升本质安全</div>
+            </div>
+            <div class="dir-card">
+                <div class="dir-icon">🔗</div>
+                <h3>AI 平台与工具链建设</h3>
+                <p>依托宝联登工业互联网平台与工业互联网人工智能中台，
+                打通数据、算力、模型、应用的完整链路，让 AI 能力成为可复用、可交付的产品。</p>
+                <div class="dir-meta">底座：宝联登 xIn3Plat · 宝之云智算</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 政策 -->
+    <section id="policy">
+        <div class="section-header">
+            <div class="tag">POLICY</div>
+            <h2>政策依据</h2>
+            <p>BTC 认证体系的上位政策与产业导向</p>
+        </div>
+
+        <div class="policy-grid">
+            <div class="policy-card">
+                <div class="year">2027</div>
+                <div class="target">70%</div>
+                <div class="desc">"人工智能+"行动：新一代智能终端、智能体等应用普及率超 70%</div>
+            </div>
+            <div class="policy-card">
+                <div class="year">2030</div>
+                <div class="target">90%</div>
+                <div class="desc">智能终端、智能体应用普及率超 90%，智能经济成为重要增长极</div>
+            </div>
+            <div class="policy-card">
+                <div class="year">2035</div>
+                <div class="target">智能社会</div>
+                <div class="desc">全面步入智能经济和智能社会发展新阶段</div>
+            </div>
+        </div>
+
+        <div class="notice">
+            <strong>政策依据：</strong>国务院《关于深入实施"人工智能+"行动的意见》（国发〔2025〕11号）明确提出
+            "着力提升全员人工智能素养与技能"、"大力支持开展人工智能技能培训"、建设"多元化评价体系"，
+            并提出"加快工业软件创新突破，大力发展智能制造装备"。BTC 认证正是这一政策导向在企业内部的落地载体。
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th style="width:210px;">政策 / 规划</th><th style="width:130px;">发布</th><th>核心内容</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>"人工智能+"行动的意见</strong></td><td>国务院<br>2025.08</td><td>国发〔2025〕11号，六大重点行动、八项支撑，2027/2030/2035三阶段目标</td></tr>
+                    <tr><td><strong>人形机器人创新发展指导意见</strong></td><td>工信部<br>2023.11</td><td>2025年创新体系初步建立、整机达国际先进水平并批量生产；2027年形成安全可靠产业生态</td></tr>
+                    <tr><td><strong>"人工智能+制造"专项行动</strong></td><td>2026.01</td><td>推动 AI 与制造业全流程深度融合的专项行动实施意见</td></tr>
+                    <tr><td><strong>宝武"万名宝罗上岗"</strong></td><td>宝武集团<br>2023—2026</td><td>以消灭3D岗位为目标，2026年底机器人规模超1万台套</td></tr>
+                    <tr><td><strong>十五五规划建议</strong></td><td>中共中央<br>2025.10</td><td>推动人工智能与制造、机器人等新兴产业融合发展</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 备考指南 -->
+    <section id="guide" class="alt">
+        <div class="section-header">
+            <div class="tag">ACTION GUIDE</div>
+            <h2>备考行动指南</h2>
+            <p>四个阶段，把认证稳稳拿下来</p>
+        </div>
+
+        <div class="timeline">
+            <div class="tl-item">
+                <div class="date">11月6日 - 22日</div>
+                <div class="content">
+                    <h4>第一阶段：模拟考与复习周</h4>
+                    <p>通过中国宝武学习系统进入"宝信软件分中心 - 考试中心"，开放模拟考试练习通道。
+                    熟悉题型分布、题量与平台操作界面。模拟考成绩不计入正式认证考核结果，但强烈建议至少完整练习 2 次。</p>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="date">11月 - 12月</div>
+                <div class="content">
+                    <h4>第二阶段：正式理论测试</h4>
+                    <p>属地化集中在线闭卷，100分满分，60分钟。考场由本单位安排，同一考场不少于2名监考老师，
+                    须具备腾讯会议视频监考条件。总部人力部同步视频巡考。请提前熟悉设备与网络环境。</p>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="date">理论通过后</div>
+                <div class="content">
+                    <h4>第三阶段：实操 / 实战 / 答辩</h4>
+                    <p>L1：日常办公智能体实操任务通关。L2："微认证"项目制，基于工作流模式开展智能体搭建，必要时现场答辩。
+                    L3：开展复杂 AI 落地项目实战，取得阶段性应用成果，提交项目成果报告并接受现场答辩评审。</p>
+                </div>
+            </div>
+            <div class="tl-item">
+                <div class="date">考核完成后</div>
+                <div class="content">
+                    <h4>第四阶段：证书与后续发展</h4>
+                    <p>通过两个阶段考核者，授予第二期对应级别"宝信图灵认证"（BTC）证书。
+                    认证结果纳入公司 AI 人才储备池，作为职位晋升、评优及专项 Token 支持的重要依据，
+                    优异者将在重大项目担纲、科研项目主导、外部培训赋能等方面获得倾斜。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="notice" style="margin-top:44px;">
+            <strong>选级建议：</strong>根据自身 AI 技术掌握程度自主选择，不必逐级报考。日常以 AI 工具使用为主、寻求效率提升的同事建议报考
+            <span class="hl-glow">L1</span>；具备开发或流程设计能力、希望主导业务场景改造的同事建议报考
+            <span class="hl">L2</span>；有算法、架构或复杂系统工程背景、希望承担攻坚任务的同事建议直接报考
+            <span class="hl-glow">L3</span>。
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>夯实全员 AI 素养，共建 AI 人才梯队</h2>
+        <p>认证结果将作为公司挖掘 AI 人才、评价各单位 AI 能力建设成效的重要参考依据</p>
+        <div class="cta-grid">
+            <div class="cta-item">
+                <h4>自主报名</h4>
+                <p>结合自身 AI 能力现状合理选择报考等级，无需按顺序逐级认证</p>
+            </div>
+            <div class="cta-item">
+                <h4>内部宣贯</h4>
+                <p>各单位做好内部宣贯动员，引导员工合理选级，鼓励全员参与</p>
+            </div>
+            <div class="cta-item">
+                <h4>考场组织</h4>
+                <p>各单位安排本单位考场和现场监考老师，同一考场不少于 2 名监考老师</p>
+            </div>
+            <div class="cta-item">
+                <h4>工作联系人</h4>
+                <p>夏芳桂 021-20379291 / 钱栋 021-20379290</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <div class="logo">Luna<span>Robotics</span></div>
+                <p>为星际探索造通用人形机器人。<br>
+                宝信图灵认证（BTC）第二期专题 ·<br>
+                分层分类建设 AI 人才梯队。</p>
+            </div>
+            <div class="footer-col">
+                <h5>认证体系</h5>
+                <ul>
+                    <li><a href="#overview">认证概览</a></li>
+                    <li><a href="#levels">新锐级 L1</a></li>
+                    <li><a href="#levels">小咖级 L2</a></li>
+                    <li><a href="#levels">达人级 L3</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>考试信息</h5>
+                <ul>
+                    <li><a href="#process">考核流程</a></li>
+                    <li><a href="#schedule">考试安排</a></li>
+                    <li><a href="#schedule">登录方式</a></li>
+                    <li><a href="#guide">备考指南</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>公司</h5>
+                <ul>
+                    <li><a href="#direction">发展方向</a></li>
+                    <li><a href="#policy">政策依据</a></li>
+                    <li><a href="../index.html">公司官网</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 Luna Robotics 月神机器人 · 宝信图灵认证（BTC）第二期 | 通知发布日期 2026年11月6日
+        </div>
+    </footer>
+
+</body>
+</html>

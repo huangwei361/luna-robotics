@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luna Robotics 月神机器人 — 星际探索人形机器人公司</title>
+    <style>
+        :root {
+            --space: #050A18;
+            --deep: #0B162C;
+            --moon: #C9D4E0;
+            --mars: #E27B58;
+            --earth: #4A90D9;
+            --glow: #64FFDA;
+            --text: #E8EDF5;
+            --sub: #8F9BB3;
+            --card: rgba(255,255,255,0.06);
+            --border: rgba(255,255,255,0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background: var(--space);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* 星空背景 */
+        .stars {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 0;
+            background: radial-gradient(ellipse at top, #0B162C 0%, #050A18 60%);
+        }
+        .stars::before {
+            content: ''; position: absolute;
+            width: 2px; height: 2px; border-radius: 50%;
+            box-shadow: 
+                50px 30px rgba(255,255,255,0.8), 130px 80px rgba(255,255,255,0.6),
+                200px 120px rgba(255,255,255,0.7), 320px 60px rgba(255,255,255,0.5),
+                450px 150px rgba(255,255,255,0.8), 580px 90px rgba(255,255,255,0.6),
+                700px 180px rgba(255,255,255,0.7), 850px 40px rgba(255,255,255,0.5),
+                950px 200px rgba(255,255,255,0.6), 1100px 100px rgba(255,255,255,0.8),
+                150px 350px rgba(255,255,255,0.5), 350px 420px rgba(255,255,255,0.7),
+                550px 380px rgba(255,255,255,0.6), 750px 450px rgba(255,255,255,0.8),
+                900px 500px rgba(255,255,255,0.5), 1050px 550px rgba(255,255,255,0.7);
+            animation: twinkle 8s infinite alternate;
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+            background: rgba(5, 10, 24, 0.9);
+            backdrop-filter: blur(16px);
+            padding: 0 40px; height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--border);
+        }
+        nav .logo {
+            font-size: 1.35rem; font-weight: 700; color: var(--text);
+            letter-spacing: 1px;
+        }
+        nav .logo span { color: var(--mars); }
+        nav .links { display: flex; gap: 32px; list-style: none; }
+        nav .links a {
+            color: var(--sub); text-decoration: none; font-size: 0.9rem;
+            font-weight: 500; transition: color 0.2s;
+        }
+        nav .links a:hover { color: var(--glow); }
+        nav .cta-btn {
+            background: var(--mars); color: #fff; border: none;
+            padding: 9px 22px; border-radius: 6px; font-size: 0.88rem;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+        }
+        nav .cta-btn:hover { background: #D06A47; box-shadow: 0 0 20px rgba(226,123,88,0.4); }
+
+        /* ── HERO ── */
+        .hero {
+            position: relative; z-index: 1;
+            padding: 180px 40px 120px;
+            text-align: center; color: var(--text);
+        }
+        .hero .tagline {
+            display: inline-block;
+            background: rgba(226, 123, 88, 0.12);
+            border: 1px solid rgba(226, 123, 88, 0.35);
+            color: var(--mars); padding: 6px 18px; border-radius: 20px;
+            font-size: 0.85rem; font-weight: 600; margin-bottom: 28px;
+            letter-spacing: 0.5px;
+        }
+        .hero h1 {
+            font-size: 3.4rem; font-weight: 800; letter-spacing: -1px;
+            line-height: 1.15; margin-bottom: 22px;
+        }
+        .hero h1 span { 
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero p {
+            font-size: 1.2rem; color: var(--sub);
+            max-width: 720px; margin: 0 auto 40px;
+            line-height: 1.8;
+        }
+        .hero .actions { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+        .btn {
+            display: inline-block; padding: 14px 32px; border-radius: 8px;
+            font-size: 0.95rem; font-weight: 600; text-decoration: none;
+            cursor: pointer; border: none; transition: all 0.2s;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--mars), #D06A47); 
+            color: #fff; 
+            box-shadow: 0 4px 20px rgba(226,123,88,0.35);
+        }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(226,123,88,0.5); }
+        .btn-outline { 
+            background: transparent; 
+            color: var(--text); 
+            border: 2px solid var(--border); 
+        }
+        .btn-outline:hover { border-color: var(--glow); color: var(--glow); }
+
+        /* ── Mission Stats ── */
+        .mission-stats {
+            display: flex; gap: 50px; justify-content: center; flex-wrap: wrap;
+            margin-top: 80px; padding: 40px;
+            background: var(--card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            max-width: 900px;
+            margin-left: auto; margin-right: auto;
+        }
+        .stat { text-align: center; min-width: 120px; }
+        .stat .num { 
+            font-size: 2.8rem; font-weight: 800; 
+            background: linear-gradient(135deg, var(--moon), var(--glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat .lbl { color: var(--sub); font-size: 0.9rem; margin-top: 6px; }
+
+        /* ── SECTIONS ── */
+        section { position: relative; z-index: 1; padding: 100px 40px; }
+        section.alt { background: rgba(255,255,255,0.02); }
+        .section-header { text-align: center; margin-bottom: 60px; }
+        .section-header .tag {
+            display: inline-block;
+            color: var(--mars); font-size: 0.85rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 2px;
+            margin-bottom: 14px;
+        }
+        .section-header h2 {
+            font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+        .section-header p {
+            font-size: 1.05rem; color: var(--sub); max-width: 620px; margin: 0 auto;
+        }
+
+        /* ── Products ── */
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px; max-width: 1100px; margin: 0 auto;
+        }
+        .product-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 36px;
+            transition: all 0.3s;
+        }
+        .product-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(226,123,88,0.4);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        .product-card .icon {
+            width: 60px; height: 60px; border-radius: 12px;
+            background: linear-gradient(135deg, rgba(226,123,88,0.2), rgba(100,255,218,0.1));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; margin-bottom: 22px;
+        }
+        .product-card h3 { font-size: 1.4rem; margin-bottom: 12px; }
+        .product-card .specs {
+            margin: 20px 0; padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+        }
+        .product-card .spec { font-size: 0.85rem; color: var(--sub); }
+        .product-card .spec strong { color: var(--text); display: block; }
+        .product-card .learn { color: var(--mars); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+
+        /* ── Tech Stack ── */
+        .tech-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px; max-width: 1200px; margin: 0 auto;
+        }
+        .tech-card {
+            background: var(--card); border: 1px solid var(--border);
+            border-radius: 14px; padding: 30px;
+            transition: all 0.3s;
+        }
+        .tech-card:hover { border-color: rgba(100,255,218,0.3); }
+        .tech-card h4 { font-size: 1.15rem; margin-bottom: 10px; }
+        .tech-card p { font-size: 0.9rem; color: var(--sub); line-height: 1.7; }
+        .tech-card .progress {
+            margin-top: 16px; height: 4px; background: rgba(255,255,255,0.08);
+            border-radius: 2px; overflow: hidden;
+        }
+        .tech-card .progress-bar {
+            height: 100%; border-radius: 2px;
+            background: linear-gradient(90deg, var(--mars), var(--glow));
+        }
+
+        /* ── Roadmap ── */
+        .roadmap {
+            max-width: 900px; margin: 0 auto;
+            display: flex; flex-direction: column; gap: 30px;
+        }
+        .milestone {
+            display: flex; gap: 24px;
+            padding: 28px; background: var(--card);
+            border: 1px solid var(--border); border-radius: 14px;
+        }
+        .milestone .year {
+            min-width: 80px; font-size: 1.8rem; font-weight: 800;
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .milestone h4 { font-size: 1.2rem; margin-bottom: 8px; }
+        .milestone p { color: var(--sub); font-size: 0.95rem; }
+        .milestone .status {
+            display: inline-block; margin-top: 12px; padding: 3px 12px;
+            border-radius: 12px; font-size: 0.75rem; font-weight: 600;
+        }
+        .status.green { background: rgba(46,125,50,0.2); color: #81C784; }
+        .status.blue { background: rgba(74,144,217,0.2); color: #64B5F6; }
+        .status.orange { background: rgba(226,123,88,0.2); color: var(--mars); }
+
+        /* ── Team ── */
+        .team-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px; max-width: 1000px; margin: 0 auto;
+        }
+        .member { text-align: center; padding: 30px; }
+        .member .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--mars), var(--glow));
+            margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: 700; color: var(--space);
+        }
+        .member h4 { font-size: 1.1rem; }
+        .member .role { color: var(--sub); font-size: 0.9rem; }
+
+        /* ── CTA ── */
+        .cta-section {
+            text-align: center; padding: 100px 40px;
+            background: linear-gradient(135deg, rgba(226,123,88,0.08), rgba(100,255,218,0.04));
+        }
+        .cta-section h2 { font-size: 2.4rem; margin-bottom: 16px; }
+        .cta-section p { color: var(--sub); font-size: 1.1rem; margin-bottom: 32px; }
+        .cta-form {
+            max-width: 420px; margin: 0 auto;
+            display: flex; gap: 10px;
+        }
+        .cta-form input {
+            flex: 1; padding: 14px 18px; border-radius: 8px;
+            border: 1px solid var(--border); background: rgba(0,0,0,0.2);
+            color: var(--text); font-size: 0.95rem;
+        }
+        .cta-form input::placeholder { color: var(--sub); }
+
+        /* ── FOOTER ── */
+        footer {
+            position: relative; z-index: 1;
+            background: rgba(0,0,0,0.3); border-top: 1px solid var(--border);
+            padding: 60px 40px 30px; color: var(--sub);
+        }
+        .footer-content {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col .logo { font-size: 1.3rem; font-weight: 700; color: var(--text); margin-bottom: 14px; }
+        .footer-col .logo span { color: var(--mars); }
+        .footer-col p { font-size: 0.9rem; line-height: 1.8; }
+        .footer-col h5 { color: var(--text); font-size: 0.95rem; margin-bottom: 18px; }
+        .footer-col ul { list-style: none; }
+        .footer-col ul li { margin-bottom: 10px; }
+        .footer-col ul li a { color: var(--sub); text-decoration: none; font-size: 0.9rem; }
+        .footer-col ul li a:hover { color: var(--glow); }
+        .copyright {
+            max-width: 1100px; margin: 0 auto; padding-top: 30px;
+            border-top: 1px solid var(--border); font-size: 0.85rem;
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            nav .links { display: none; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero { padding: 140px 20px 80px; }
+            section { padding: 60px 20px; }
+            .footer-content { grid-template-columns: 1fr; }
+            .mission-stats { gap: 30px; padding: 30px 20px; }
+            .stat .num { font-size: 2rem; }
+            .cta-form { flex-direction: column; }
+            .milestone { flex-direction: column; gap: 12px; }
+            .milestone .year { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="logo">Luna<span>Robotics</span></div>
+        <ul class="links">
+            <li><a href="#mission">使命</a></li>
+            <li><a href="#robots">机器人</a></li>
+            <li><a href="#technology">技术</a></li>
+            <li><a href="#roadmap">路线图</a></li>
+            <li><a href="#team">团队</a></li>
+            <li><a href="btc-training/index.html">AI 认证</a></li>
+        </ul>
+        <button class="cta-btn">加入我们</button>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="tagline">🌕 月球 · 火星 · 人类的下一个家园</div>
+        <h1>为星际探索<br><span>造通用人形机器人</span></h1>
+        <p>我们专注于极端环境下的人形机器人技术，为月球基地建设、火星探测、
+        以及未来星际殖民提供可靠的机器人劳动力。让机器人替人类迈出第一步。</p>
+        <div class="actions">
+            <a href="#robots" class="btn btn-primary">探索机器人</a>
+            <a href="#technology" class="btn btn-outline">了解技术</a>
+        </div>
+
+        <div class="mission-stats">
+            <div class="stat">
+                <div class="num">2030</div>
+                <div class="lbl">首台登月</div>
+            </div>
+            <div class="stat">
+                <div class="num">42</div>
+                <div class="lbl">全身自由度</div>
+            </div>
+            <div class="stat">
+                <div class="num">14天</div>
+                <div class="lbl">连续工作时长</div>
+            </div>
+            <div class="stat">
+                <div class="num">10年</div>
+                <div class="lbl">月面设计寿命</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mission -->
+    <section id="mission" class="alt">
+        <div class="section-header">
+            <div class="tag">OUR MISSION</div>
+            <h2>为什么是太空人形机器人？</h2>
+            <p>人类即将成为多行星物种。在人类到达之前，机器人必须先建立一切。</p>
+        </div>
+        <div style="max-width:900px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:30px;">
+            <div style="padding:30px;background:var(--card);border-radius:14px;border:1px solid var(--border);">
+                <h3 style="margin-bottom:12px;">🌙 月球基地建设</h3>
+                <p style="color:var(--sub);font-size:0.95rem;">在宇航员抵达前，人形机器人将完成基地模块部署、
+                太阳能电站建设、生命维持系统安装、以及资源勘探开采。
+                月球的14天极昼极夜、-170°C~120°C极端温度、
+                月尘磨损对机器人是巨大挑战。</p>
+            </div>
+            <div style="padding:30px;background:var(--card);border-radius:14px;border:1px solid var(--border);">
+                <h3 style="margin-bottom:12px;">🔴 火星探测与殖民</h3>
+                <p style="color:var(--sub);font-size:0.95rem;">火星低重力、稀薄大气、强烈辐射、沙尘暴是
+                人类面临的四大难题。人形机器人将先于人类
+                建设火星基地、生产氧气、提取水、种植农作物，
+                为首批移民做好一切准备。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Robots -->
+    <section id="robots">
+        <div class="section-header">
+            <div class="tag">OUR ROBOTS</div>
+            <h2>星际探索机器人系列</h2>
+            <p>从月球到火星，为每一个极端环境场景设计专用人形机器人</p>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="icon">🌙</div>
+                <h3>Luna-X1 月球机器人</h3>
+                <p style="color:var(--sub);font-size:0.95rem;">为月球表面环境优化的第一代人形机器人，
+                可在极端温度、真空、低重力环境下执行建设任务。</p>
+                <div class="specs">
+                    <div class="spec"><strong>身高</strong> 180cm · 120kg</div>
+                    <div class="spec"><strong>耐温</strong> -180°C ~ +150°C</div>
+                    <div class="spec"><strong>续航</strong> 14天（RTG+太阳能）</div>
+                    <div class="spec"><strong>自由度</strong> 42个</div>
+                    <div class="spec"><strong>载重</strong> 200kg（月球重力）</div>
+                    <div class="spec"><strong>寿命</strong> 10年/月面</div>
+                </div>
+                <a href="#" class="learn">了解详情 →</a>
+            </div>
+            <div class="product-card">
+                <div class="icon">🔴</div>
+                <h3>Mars-X1 火星机器人</h3>
+                <p style="color:var(--sub);font-size:0.95rem;">为火星环境深度优化的第二代人形机器人，
+                具备抗辐射、抗沙尘暴、自主能源管理能力。</p>
+                <div class="specs">
+                    <div class="spec"><strong>身高</strong> 185cm · 135kg</div>
+                    <div class="spec"><strong>耐温</strong> -130°C ~ +30°C</div>
+                    <div class="spec"><strong>续航</strong> 7天（核电池）</div>
+                    <div class="spec"><strong>自由度</strong> 54个</div>
+                    <div class="spec"><strong>载重</strong> 350kg（火星重力）</div>
+                    <div class="spec"><strong>寿命</strong> 15年/火星</div>
+                </div>
+                <a href="#" class="learn">了解详情 →</a>
+            </div>
+            <div class="product-card">
+                <div class="icon">🏠</div>
+                <h3>Habitat-X 基地维护机器人</h3>
+                <p style="color:var(--sub);font-size:0.95rem;">封闭/半封闭环境专用机器人，负责生命维持系统、
+                设备检修、农作物种植等精细操作任务。</p>
+                <div class="specs">
+                    <div class="spec"><strong>工作环境</strong> 封闭/加压舱</div>
+                    <div class="spec"><strong>续航</strong> 72小时</div>
+                    <div class="spec"><strong>精度</strong> ±0.1mm</div>
+                    <div class="spec"><strong>任务</strong> 检修+种植+实验</div>
+                </div>
+                <a href="#" class="learn">了解详情 →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology -->
+    <section id="technology" class="alt">
+        <div class="section-header">
+            <div class="tag">TECHNOLOGY</div>
+            <h2>六大核心技术栈</h2>
+            <p>从零打造适应太空极端环境的全栈机器人技术</p>
+        </div>
+        <div class="tech-grid">
+            <div class="tech-card">
+                <h4>❄️ 极端环境机电系统</h4>
+                <p>低温润滑、真空材料、热管理系统，
+                让机器人在-180°C到+150°C温度范围内正常工作。</p>
+                <div class="progress"><div class="progress-bar" style="width:65%"></div></div>
+            </div>
+            <div class="tech-card">
+                <h4>☢️ 抗辐射电子架构</h4>
+                <p>辐射加固芯片、容错计算架构、错误校验机制，
+                应对太空高强度电离辐射环境。</p>
+                <div class="progress"><div class="progress-bar" style="width:50%"></div></div>
+            </div>
+            <div class="tech-card">
+                <h4>🦵 低重力运动控制</h4>
+                <p>针对1/6g月球重力、3/8g火星重力优化的
+                双足平衡算法、运动规划与控制。</p>
+                <div class="progress"><div class="progress-bar" style="width:70%"></div></div>
+            </div>
+            <div class="tech-card">
+                <h4>🤖 全自主智能系统</h4>
+                <p>端到端大模型机器人控制，4-24分钟通信延迟下的
+                完全自主决策与任务执行。</p>
+                <div class="progress"><div class="progress-bar" style="width:55%"></div></div>
+            </div>
+            <div class="tech-card">
+                <h4>⚡ 长周期能源系统</h4>
+                <p>高效太阳能、同位素核电池、能量管理算法，
+                支持14天月球极夜连续工作。</p>
+                <div class="progress"><div class="progress-bar" style="width:40%"></div></div>
+            </div>
+            <div class="tech-card">
+                <h4>🛡️ 月尘/火星尘防护</h4>
+                <p>密封设计、材料涂层、主动除尘系统，
+                应对磨蚀性极强的外星尘埃。</p>
+                <div class="progress"><div class="progress-bar" style="width:35%"></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap">
+        <div class="section-header">
+            <div class="tag">ROADMAP</div>
+            <h2>星际探索路线图</h2>
+            <p>十年磨一剑，一步一个脚印走向太空</p>
+        </div>
+        <div class="roadmap">
+            <div class="milestone">
+                <div class="year">2026</div>
+                <div>
+                    <h4>地球原型验证</h4>
+                    <p>完成Luna-X1原型机，在地球沙漠、极地等模拟环境进行测试。
+                    验证极端温度、地形适应、自主导航等核心能力。</p>
+                    <span class="status blue">进行中</span>
+                </div>
+            </div>
+            <div class="milestone">
+                <div class="year">2027</div>
+                <div>
+                    <h4>低重力模拟试验</h4>
+                    <p>在抛物线飞机、水下环境进行低重力运动控制验证。
+                    完成真空舱环境下的全系统测试。</p>
+                    <span class="status orange">规划中</span>
+                </div>
+            </div>
+            <div class="milestone">
+                <div class="year">2028</div>
+                <div>
+                    <h4>近地轨道验证</h4>
+                    <p>将小型验证机器人送入空间站，在微重力、
+                    辐射环境下进行为期6个月的在轨测试。</p>
+                    <span class="status orange">规划中</span>
+                </div>
+            </div>
+            <div class="milestone">
+                <div class="year">2030</div>
+                <div>
+                    <h4>🚀 登月！</h4>
+                    <p>Luna-X1搭乘月球着陆器登上月球表面，
+                    在月球南极执行首次建设任务，这将是人类首台登月人形机器人。</p>
+                    <span class="status orange">目标</span>
+                </div>
+            </div>
+            <div class="milestone">
+                <div class="year">2035</div>
+                <div>
+                    <h4>🔴 火星任务</h4>
+                    <p>Mars-X1首飞火星，在人类抵达前开始基地建设。
+                    同时部署多台机器人，形成协同作业能力。</p>
+                    <span class="status orange">长期目标</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team -->
+    <section id="team" class="alt">
+        <div class="section-header">
+            <div class="tag">OUR TEAM</div>
+            <h2>我们相信，多行星物种的未来必须靠自己建造</h2>
+        </div>
+        <div class="team-grid">
+            <div class="member">
+                <div class="avatar">航</div>
+                <h4>航天系统工程师</h4>
+                <div class="role">前 SpaceX 星舰团队</div>
+            </div>
+            <div class="member">
+                <div class="avatar">机</div>
+                <h4>机器人控制专家</h4>
+                <div class="role">前 Boston Dynamics 算法团队</div>
+            </div>
+            <div class="member">
+                <div class="avatar">材</div>
+                <h4>极端环境材料科学家</h4>
+                <div class="role">前 NASA JPL 材料实验室</div>
+            </div>
+            <div class="member">
+                <div class="avatar">智</div>
+                <h4>AI与大模型工程师</h4>
+                <div class="role">前 OpenAI 机器人团队</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 合作机构与融资状态 -->
+    <section class="alt">
+        <div class="section-header">
+            <div class="tag">PARTNERS &amp; FUNDING</div>
+            <h2>合作伙伴 &amp; 融资进展</h2>
+            <p>已与全球顶尖航天机构建立合作，2027年A轮融资进行中</p>
+        </div>
+        <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;">
+            <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                <div style="font-size:0.85rem;color:var(--mars);font-weight:600;margin-bottom:8px;">战略合作</div>
+                <div style="font-size:1.05rem;font-weight:600;">NASA JPL</div>
+                <div style="font-size:0.85rem;color:var(--sub);margin-top:6px;">深空通信模块联合开发</div>
+            </div>
+            <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                <div style="font-size:0.85rem;color:var(--mars);font-weight:600;margin-bottom:8px;">发射服务</div>
+                <div style="font-size:1.05rem;font-weight:600;">SpaceX</div>
+                <div style="font-size:0.85rem;color:var(--sub);margin-top:6px;">2030年星舰搭载协议</div>
+            </div>
+            <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                <div style="font-size:0.85rem;color:var(--mars);font-weight:600;margin-bottom:8px;">核能源</div>
+                <div style="font-size:1.05rem;font-weight:600;">DOE · 中核院</div>
+                <div style="font-size:0.85rem;color:var(--sub);margin-top:6px;">Pu-238同位素电池供应</div>
+            </div>
+            <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                <div style="font-size:0.85rem;color:var(--mars);font-weight:600;margin-bottom:8px;">核心部件</div>
+                <div style="font-size:1.05rem;font-weight:600;">Honeywell · Moog</div>
+                <div style="font-size:0.85rem;color:var(--sub);margin-top:6px;">IMU与作动器A级供应商</div>
+            </div>
+            <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                <div style="font-size:0.85rem;color:var(--glow);font-weight:600;margin-bottom:8px;">当前轮次</div>
+                <div style="font-size:1.05rem;font-weight:600;">A轮 · $2500万</div>
+                <div style="font-size:0.85rem;color:var(--sub);margin-top:6px;">2027年Q2 计划关闭</div>
+            </div>
+            <div style="padding:24px;background:var(--card);border:1px solid var(--border);border-radius:12px;text-align:center;">
+                <div style="font-size:0.85rem;color:var(--glow);font-weight:600;margin-bottom:8px;">投后估值</div>
+                <div style="font-size:1.05rem;font-weight:600;">$1亿</div>
+                <div style="font-size:0.85rem;color:var(--sub);margin-top:6px;">种子轮估值已$2500万</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BTC 培训认证入口 -->
+    <section id="training">
+        <div style="max-width:1000px;margin:0 auto;padding:44px 48px;background:linear-gradient(135deg,rgba(226,123,88,0.12),rgba(100,255,218,0.06));border:1px solid rgba(226,123,88,0.3);border-radius:18px;display:flex;gap:36px;align-items:center;flex-wrap:wrap;">
+            <div style="flex:1;min-width:300px;">
+                <div style="display:inline-block;background:rgba(226,123,88,0.2);border:1px solid rgba(226,123,88,0.4);color:var(--mars);padding:3px 12px;border-radius:14px;font-size:0.78rem;font-weight:700;margin-bottom:14px;">公司内部培训认证</div>
+                <h2 style="font-size:1.9rem;margin-bottom:10px;">宝信图灵认证（BTC）第二期</h2>
+                <p style="color:var(--sub);font-size:0.98rem;line-height:1.8;">
+                分层分类建设公司 AI 人才梯队。打破逐级报考限制，员工可自主选择报考
+                <strong style="color:var(--mars);">BTC-L1 / L2 / L3</strong> 任意等级 —— 从"会用 AI"到"构筑 AI"。
+                理论测试 2026年11月6日开放模拟考。</p>
+            </div>
+            <div style="display:flex;gap:28px;text-align:center;">
+                <div><div style="font-size:1.9rem;font-weight:800;color:var(--mars);">3</div><div style="font-size:0.82rem;color:var(--sub);">认证等级</div></div>
+                <div><div style="font-size:1.9rem;font-weight:800;color:var(--mars);">60<span style="font-size:1rem;">min</span></div><div style="font-size:0.82rem;color:var(--sub);">理论测试</div></div>
+                <div><div style="font-size:1.9rem;font-weight:800;color:var(--mars);">11.6</div><div style="font-size:0.82rem;color:var(--sub);">模拟考开放</div></div>
+            </div>
+            <a href="btc-training/index.html" class="btn btn-primary" style="white-space:nowrap;">进入专题 →</a>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>一起建造人类的星际未来</h2>
+        <p>如果你也相信多行星物种的未来，加入我们。</p>
+        <div class="cta-form">
+            <input type="email" placeholder="输入你的邮箱">
+            <button class="btn btn-primary">加入团队</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <div class="logo">Luna<span>Robotics</span></div>
+                <p>为星际探索造通用人形机器人。<br>
+                月球 · 火星 · 人类的下一个家园。</p>
+            </div>
+            <div class="footer-col">
+                <h5>机器人</h5>
+                <ul>
+                    <li><a href="#">Luna-X1 月球机器人</a></li>
+                    <li><a href="#">Mars-X1 火星机器人</a></li>
+                    <li><a href="#">Habitat-X 基地机器人</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>技术</h5>
+                <ul>
+                    <li><a href="#">极端环境机电</a></li>
+                    <li><a href="#">抗辐射电子</a></li>
+                    <li><a href="#">低重力控制</a></li>
+                    <li><a href="#">自主智能系统</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h5>关于</h5>
+                <ul>
+                    <li><a href="#">我们的使命</a></li>
+                    <li><a href="#">路线图</a></li>
+                    <li><a href="btc-training/index.html">AI 认证 · BTC</a></li>
+                    <li><a href="#">联系我们</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            © 2026 Luna Robotics 月神机器人公司. 为了人类成为多行星物种。
+        </div>
+    </footer>
+
+</body>
+</html>
